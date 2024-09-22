@@ -1,0 +1,41 @@
+services:
+  codeigniter:
+    image: anhnguyen2402/findinghome_website:codeigniter
+    ports:
+      - "8000:80"
+    volumes:
+      - ./codeigniter:/var/www/html
+    depends_on:
+      - findHome
+
+  react:
+    image: anhnguyen2402/findinghome_website:react
+    ports:
+      - "3000:3000"
+    depends_on:
+      - codeigniter
+
+  python:
+    image: anhnguyen2402/findinghome_website:python
+    ports:
+      - "5000:5000"
+      # - "5001:5001"
+    volumes:
+     - ./python:/app
+    depends_on:
+      - findHome
+
+  findHome:
+    image: anhnguyen2402/findinghome_website:mysql
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: findHome@2024
+      MYSQL_DATABASE: findHome
+      MYSQL_USER: findHome
+      MYSQL_PASSWORD: findHome@2024
+volumes:
+  mysql_data:
+    driver: local
